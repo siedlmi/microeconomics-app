@@ -39,12 +39,12 @@ export default function DemandSupplyGraph({ type }: { type: LessonType }) {
   }));
 
   const springProps = useSpring({ number: price });
-
+  const displayValue = springProps.number.to(n => Math.round(n).toString());
   return (
     <div className="mt-4">
       <div className="grid md:grid-cols-2 gap-4 mb-4">
         <div>
-        <label className="block font-medium mb-1">Adjust Price: <animated.span>{springProps.number.to((n) => Math.round(n).toString() as any)}</animated.span></label>
+        <label className="block font-medium mb-1">Adjust Price: <animated.span>{displayValue}</animated.span></label>
           <input
             type="range"
             min={10}
