@@ -1,26 +1,29 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Sidebar from './components/Sidebar';
+import Dashboard from './components/Dashboard';
+import Glossary from './components/Glossary';
+import Profile from './components/Profile';
+import GlossaryTerm from './components/GlossaryTerm';
+import CourseRouter from './courses/CourseRouter';
 
-function App() {
+export default function App() {
+  const [completed, setCompleted] = useState({ law: false, ppc: false, consumer: false });
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <div className="flex">
+        <Sidebar completed={completed} />
+        <main className="ml-64 p-6 w-full bg-gray-50 min-h-screen">
+          <Routes>
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/courses/*" element={<CourseRouter setCompleted={setCompleted} />} />
+            <Route path="/glossary" element={<Glossary />} />
+            <Route path="/glossary/:term" element={<GlossaryTerm />} />
+            <Route path="/profile" element={<Profile />} />
+          </Routes>
+        </main>
+      </div>
+    </Router>
   );
 }
-
-export default App;
