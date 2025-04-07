@@ -1,51 +1,61 @@
-import { useState } from 'react';
+import { useParams, useNavigate, Navigate } from 'react-router-dom';
+import { useMemo } from 'react';
+import QuizComponent from '../../components/QuizComponent';
 import consumerLessons from './lessons';
 import consumerQuiz from './quiz';
-import QuizComponent from '../../components/QuizComponent';
 
 export default function ConsumerCourse({ onComplete }: { onComplete: () => void }) {
-  const [index, setIndex] = useState(0);
-  const [showQuiz, setShowQuiz] = useState(false);
-  const [quizComplete, setQuizComplete] = useState(false);
+  const { lessonId } = useParams();
+  const navigate = useNavigate();
 
-  const current = consumerLessons[index];
+  const currentIndex = useMemo(() => {
+    const num = parseInt(lessonId?.replace('lesson-', '') || '1', 10);
+    return isNaN(num) ? 0 : num - 1;
+  }, [lessonId]);
 
-  const handleNext = () => {
-    if (index < consumerLessons.length - 1) {
-      setIndex(index + 1);
-    } else {
-      setShowQuiz(true);
-      onComplete(); // mark course as completed in app state
-    }
+  const isQuiz = currentIndex >= consumerLessons.length;
+  const lesson = consumerLessons[currentIndex];
+
+  if (currentIndex < 0 || (!isQuiz && !lesson)) {
+    return <Navigate to="/courses/consumer-choice/lesson-1" replace />;
+  }
+
+  const handleNextLesson = () => {
+    navigate(`/courses/consumer-choice/lesson-${currentIndex + 2}`);
+  };
+
+  const handleStartQuiz = () => {
+    navigate(`/courses/consumer-choice/lesson-${consumerLessons.length + 1}`);
   };
 
   return (
     <div>
-      {!showQuiz ? (
+      {!isQuiz ? (
         <>
-          <h1 className="text-2xl font-bold mb-2">{current.title}</h1>
-          <p className="mb-4">{current.description}</p>
-          <button
-            onClick={handleNext}
-            className="mt-4 px-4 py-2 bg-indigo-600 text-white rounded"
-          >
-            {index === consumerLessons.length - 1 ? 'Start Quiz' : 'Next Lesson'}
-          </button>
+          <h1 className="text-2xl font-bold mb-2">{lesson.title}</h1>
+          <p className="mb-4">{lesson.description}</p>
+
+          <div className="mt-6 flex gap-3">
+            {currentIndex < consumerLessons.length - 1 && (
+              <button
+                onClick={handleNextLesson}
+                className="px-4 py-2 bg-indigo-600 text-white rounded"
+              >
+                Next Lesson
+              </button>
+            )}
+            <button
+              onClick={handleStartQuiz}
+              className="px-4 py-2 bg-green-600 text-white rounded"
+            >
+              Start Quiz Now
+            </button>
+          </div>
         </>
       ) : (
         <>
-          <h1 className="text-2xl font-bold mb-2">🧠 Consumer Choice Quiz</h1>
-          {!quizComplete ? (
-            <QuizComponent
-              quiz={consumerQuiz}
-              onComplete={() => setQuizComplete(true)}
-            />
-          ) : (
-            <div className="p-4 mt-4 bg-green-100 rounded">
-              <h2 className="text-xl font-semibold text-green-700 mb-2">🎉 Quiz Completed!</h2>
-              <p>Great work! You’ve finished the Consumer Choice course.</p>
-            </div>
-          )}
+          <h2 className="text-xl font-bold mb-4">🧠 Quiz: Consumer Choice</h2>
+          <QuizComponent quiz={consumerQuiz} onComplete={onComplete} />
         </>
       )}
     </div>

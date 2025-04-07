@@ -1,22 +1,47 @@
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import LawCourse from './law';
 import PPCCourse from './ppc';
 import ConsumerCourse from './consumer';
 
-export default function CourseRouter({ setCompleted }: { setCompleted: (state: any) => void }) {
+export default function CourseRouter({
+  setCompleted,
+}: {
+  setCompleted: (state: any) => void;
+}) {
   return (
     <Routes>
+      {/* === Law of Supply and Demand === */}
       <Route
         path="law-of-supply-and-demand"
-        element={<LawCourse onComplete={() => setCompleted((s: any) => ({ ...s, law: true }))} />}
+        element={<Navigate to="law-of-supply-and-demand/lesson-1" replace />}
       />
       <Route
-        path="ppc"
-        element={<PPCCourse onComplete={() => setCompleted((s: any) => ({ ...s, ppc: true }))} />}
+        path="law-of-supply-and-demand/:lessonId"
+        element={
+          <LawCourse onComplete={() => setCompleted((s: any) => ({ ...s, law: true }))} />
+        }
       />
+
+      {/* === Consumer Choice === */}
       <Route
         path="consumer-choice"
-        element={<ConsumerCourse onComplete={() => setCompleted((s: any) => ({ ...s, consumer: true }))} />}
+        element={<Navigate to="consumer-choice/lesson-1" replace />}
+      />
+      <Route
+        path="consumer-choice/:lessonId"
+        element={
+          <ConsumerCourse
+            onComplete={() => setCompleted((s: any) => ({ ...s, consumer: true }))}
+          />
+        }
+      />
+
+      {/* === PPC (single-page course) === */}
+      <Route
+        path="ppc"
+        element={
+          <PPCCourse onComplete={() => setCompleted((s: any) => ({ ...s, ppc: true }))} />
+        }
       />
     </Routes>
   );
