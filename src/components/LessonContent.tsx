@@ -73,10 +73,22 @@ export default function LessonContent({ title, description, children }: LessonCo
   };
 
   return (
-    <div className="mb-6">
-      {title && <h1 className="text-2xl font-bold mb-2">{title}</h1>}
-      {description && <p className="mb-4">{addGlossaryLinks(description)}</p>}
-      {children}
+    <div className="space-y-6">
+      {title && (
+        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-gray-900">
+          {title}
+        </h1>
+      )}
+      {description && (
+        <div className="prose prose-lg max-w-none">
+          <p className="text-base sm:text-lg md:text-xl text-gray-600">
+            {addGlossaryLinks(description)}
+          </p>
+        </div>
+      )}
+      <div className="mt-8">
+        {children}
+      </div>
     </div>
   );
 } 
