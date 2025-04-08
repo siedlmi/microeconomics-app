@@ -2,11 +2,46 @@ import { useLang } from '../i18n';
 import { useState, useEffect, createContext, useContext } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import lawMetadata from '../courses/law/metadata';
+import consumerMetadata from '../courses/consumer/metadata';
+import ppcMetadata from '../courses/ppc/metadata';
 
 export const SidebarContext = createContext<{
   isOpen: boolean;
   isMobile: boolean;
 }>({ isOpen: true, isMobile: false });
+
+interface CourseMetadata {
+  id: string;
+  content: {
+    lessons: Array<{
+      title: string;
+    }>;
+  };
+}
+
+const courseMetadata: Record<string, CourseMetadata> = {
+  law: lawMetadata,
+  consumer: consumerMetadata,
+  ppc: ppcMetadata,
+};
+
+const generateLessonLinks = (courseId: string, basePath: string) => {
+  const metadata = courseMetadata[courseId];
+  if (!metadata) return null;
+
+  return metadata.content.lessons.map((lesson, index) => (
+    <NavLink
+      key={`${courseId}-lesson-${index + 1}`}
+      to={`/courses/${basePath}/lesson-${index + 1}`}
+      className={({ isActive }) =>
+        `block px-2 py-1 rounded ${isActive ? 'bg-blue-100 text-blue-800 font-semibold' : 'hover:bg-gray-100'}`
+      }
+    >
+      • {lesson.title}
+    </NavLink>
+  ));
+};
 
 export default function Sidebar({ completed }: { completed: any }) {
   const { t, switchLanguage, lang } = useLang();
@@ -34,9 +69,6 @@ export default function Sidebar({ completed }: { completed: any }) {
       setIsOpen(false);
     }
   }, [location, isMobile]);
-
-  const linkClass = ({ isActive }: { isActive: boolean }) =>
-    `block px-2 py-1 rounded ${isActive ? 'bg-blue-100 text-blue-800 font-semibold' : 'hover:bg-gray-100'}`;
 
   const sidebarVariants = {
     open: { x: 0, opacity: 1 },
@@ -81,7 +113,9 @@ export default function Sidebar({ completed }: { completed: any }) {
           <h2 className="text-xl font-bold mb-6">Microeconomics Academy</h2>
 
           <nav className="flex flex-col gap-3 text-sm">
-            <NavLink to="/" className={linkClass}>{t.dashboard}</NavLink>
+            <NavLink to="/" className={({ isActive }) =>
+              `block px-2 py-1 rounded ${isActive ? 'bg-blue-100 text-blue-800 font-semibold' : 'hover:bg-gray-100'}`
+            }>{t.dashboard}</NavLink>
 
             <div>
               <div
@@ -102,10 +136,7 @@ export default function Sidebar({ completed }: { completed: any }) {
                     </button>
                     {openCourse === 'law' && (
                       <div className="ml-3 mt-1 space-y-1">
-                        <NavLink to="/courses/law-of-supply-and-demand/lesson-1" className={linkClass}>• Lesson 1</NavLink>
-                        <NavLink to="/courses/law-of-supply-and-demand/lesson-2" className={linkClass}>• Lesson 2</NavLink>
-                        <NavLink to="/courses/law-of-supply-and-demand/lesson-3" className={linkClass}>• Lesson 3</NavLink>
-                        <NavLink to="/courses/law-of-supply-and-demand/lesson-4" className={linkClass}>• Supply Elasticity</NavLink>
+                        {generateLessonLinks('law', 'law-of-supply-and-demand')}
                       </div>
                     )}
                   </div>
@@ -119,12 +150,7 @@ export default function Sidebar({ completed }: { completed: any }) {
                     </button>
                     {openCourse === 'consumer' && (
                       <div className="ml-3 mt-1 space-y-1">
-                        <NavLink to="/courses/consumer-choice/lesson-1" className={linkClass}>• Preferences</NavLink>
-                        <NavLink to="/courses/consumer-choice/lesson-2" className={linkClass}>• Budget Constraint</NavLink>
-                        <NavLink to="/courses/consumer-choice/lesson-3" className={linkClass}>• Indifference Curves</NavLink>
-                        <NavLink to="/courses/consumer-choice/lesson-4" className={linkClass}>• MRS</NavLink>
-                        <NavLink to="/courses/consumer-choice/lesson-5" className={linkClass}>• Equilibrium</NavLink>
-                        <NavLink to="/courses/consumer-choice/lesson-6" className={linkClass}>• Effects of Income/Prices</NavLink>
+                        {generateLessonLinks('consumer', 'consumer-choice')}
                       </div>
                     )}
                   </div>
@@ -138,11 +164,7 @@ export default function Sidebar({ completed }: { completed: any }) {
                     </button>
                     {openCourse === 'ppc' && (
                       <div className="ml-3 mt-1 space-y-1">
-                        <NavLink to="/courses/ppc/1" className={linkClass}>• Introduction to PPC</NavLink>
-                        <NavLink to="/courses/ppc/2" className={linkClass}>• Opportunity Cost</NavLink>
-                        <NavLink to="/courses/ppc/3" className={linkClass}>• Efficiency</NavLink>
-                        <NavLink to="/courses/ppc/4" className={linkClass}>• Economic Growth</NavLink>
-                        <NavLink to="/courses/ppc/quiz" className={linkClass}>• Quiz</NavLink>
+                        {generateLessonLinks('ppc', 'ppc')}
                       </div>
                     )}
                   </div>
@@ -150,8 +172,12 @@ export default function Sidebar({ completed }: { completed: any }) {
               )}
             </div>
 
-            <NavLink to="/glossary" className={linkClass}>{t.glossary}</NavLink>
-            <NavLink to="/profile" className={linkClass}>{t.profile}</NavLink>
+            <NavLink to="/glossary" className={({ isActive }) =>
+              `block px-2 py-1 rounded ${isActive ? 'bg-blue-100 text-blue-800 font-semibold' : 'hover:bg-gray-100'}`
+            }>{t.glossary}</NavLink>
+            <NavLink to="/profile" className={({ isActive }) =>
+              `block px-2 py-1 rounded ${isActive ? 'bg-blue-100 text-blue-800 font-semibold' : 'hover:bg-gray-100'}`
+            }>{t.profile}</NavLink>
           </nav>
         </div>
 
