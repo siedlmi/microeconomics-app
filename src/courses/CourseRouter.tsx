@@ -1,7 +1,7 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
-import LawCourse from './law';
-import PPCCourse from './ppc';
-import ConsumerCourse from './consumer';
+import LawCourse from './law-of-supply-and-demand';
+import PPCCourse from './production-possibilities-curve';
+import ConsumerCourse from './consumer-choice';
 
 export default function CourseRouter({
   setCompleted,
@@ -38,11 +38,11 @@ export default function CourseRouter({
 
       {/* === Production Possibilities Curve === */}
       <Route
-        path="ppc"
-        element={<Navigate to="ppc/1" replace />}
+        path="production-possibilities-curve"
+        element={<Navigate to="production-possibilities-curve/1" replace />}
       />
       <Route
-        path="ppc/:lessonId"
+        path="production-possibilities-curve/:lessonId"
         element={
           <PPCCourse
             onComplete={() => setCompleted((s: any) => ({ ...s, ppc: true }))}

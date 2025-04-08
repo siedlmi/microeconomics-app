@@ -8,7 +8,7 @@ export interface LawLesson {
 }
 
 const lawMetadata: CourseMetadata & { content: { lessons: LawLesson[] } } = {
-  id: 'law',
+  id: 'law-of-supply-and-demand',
   title: 'Law of Supply and Demand',
   description: 'Learn how prices are determined in competitive markets',
   content: {
@@ -32,6 +32,11 @@ const lawMetadata: CourseMetadata & { content: { lessons: LawLesson[] } } = {
         title: 'Supply Elasticity',
         description: 'Learn how responsive supply is to changes in price. Supply elasticity measures how much the quantity supplied changes when the price changes.',
         type: 'supply'
+      },
+      {
+        title: 'Normal and Inferior Goods',
+        description: 'Understand how different types of goods respond to changes in income. Normal goods see increased demand with higher income, while inferior goods see decreased demand.',
+        type: 'demand'
       }
     ],
     quiz: [
@@ -69,6 +74,24 @@ const lawMetadata: CourseMetadata & { content: { lessons: LawLesson[] } } = {
           { text: 'A large change in price causes a small change in quantity supplied', isCorrect: false },
           { text: 'Price and quantity change proportionally', isCorrect: false },
           { text: 'Supply does not change with price', isCorrect: false },
+        ],
+      },
+      {
+        question: 'What is a normal good?',
+        options: [
+          { text: 'A good whose demand increases when income increases', isCorrect: true },
+          { text: 'A good whose demand decreases when income increases', isCorrect: false },
+          { text: 'A good that is always in high demand', isCorrect: false },
+          { text: 'A good that is always in low demand', isCorrect: false },
+        ],
+      },
+      {
+        question: 'Which of the following is an example of an inferior good?',
+        options: [
+          { text: 'Luxury cars', isCorrect: false },
+          { text: 'Generic brand products', isCorrect: true },
+          { text: 'Organic food', isCorrect: false },
+          { text: 'Designer clothing', isCorrect: false },
         ],
       }
     ]

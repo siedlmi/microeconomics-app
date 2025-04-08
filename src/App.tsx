@@ -13,10 +13,12 @@ export default function App() {
 
   return (
     <Router>
-      <div className="min-h-screen bg-gray-50">
-        <Sidebar completed={completed} />
+      <div className="min-h-screen bg-gray-50 flex flex-col md:flex-row">
+        <Sidebar completed={completed}>
+          <div></div>
+        </Sidebar>
         <MainContent>
-          <div className="p-6 h-full">
+          <div className="flex-1 p-4 sm:p-6 md:p-8">
             <Routes>
               <Route path="/" element={<Dashboard />} />
               <Route path="/courses/*" element={<CourseRouter setCompleted={setCompleted} />} />

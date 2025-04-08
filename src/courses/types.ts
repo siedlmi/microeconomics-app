@@ -22,7 +22,7 @@ export interface CourseProps {
   onComplete: () => void;
 }
 
-export type CourseId = 'consumer' | 'ppc' | 'law';
+export type CourseId = 'consumer-choice' | 'production-possibilities-curve' | 'law-of-supply-and-demand';
 
 export interface CourseMetadata {
   id: CourseId;

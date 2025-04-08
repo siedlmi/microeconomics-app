@@ -1,7 +1,7 @@
 import { CourseMetadata } from '../types';
 
 const ppcMetadata: CourseMetadata = {
-  id: 'ppc',
+  id: 'production-possibilities-curve',
   title: 'Production Possibilities Curve',
   description: 'Learn about production trade-offs and opportunity costs',
   content: {

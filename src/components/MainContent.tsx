@@ -1,22 +1,14 @@
-import { useContext } from 'react';
-import { SidebarContext } from './Sidebar';
+import React from 'react';
 
-export default function MainContent({ children }: { children: React.ReactNode }) {
-  const { isOpen, isMobile } = useContext(SidebarContext);
+interface MainContentProps {
+  children: React.ReactNode;
+}
 
+export default function MainContent({ children }: MainContentProps) {
   return (
-    <main
-      className={`min-h-screen bg-gray-50 transition-all duration-300 ease-in-out
-        ${isOpen && !isMobile ? 'ml-64' : 'ml-0'}
-        p-4 sm:p-6 md:p-8
-        flex flex-col
-        ${isMobile ? 'pt-16' : ''}
-      `}
-    >
-      <div className="max-w-7xl w-full mx-auto">
-        <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6 md:p-8">
-          {children}
-        </div>
+    <main className="flex-1 w-full min-h-screen pt-16 md:pt-0 md:ml-64">
+      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {children}
       </div>
     </main>
   );

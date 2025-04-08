@@ -1,7 +1,7 @@
 import { CourseMetadata } from '../types';
 
 const consumerMetadata: CourseMetadata = {
-  id: 'consumer',
+  id: 'consumer-choice',
   title: 'Consumer Choice Theory',
   description: 'Learn how consumers make decisions given their preferences and constraints',
   content: {
