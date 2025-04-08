@@ -27,6 +27,11 @@ const lawMetadata: CourseMetadata & { content: { lessons: LawLesson[] } } = {
         title: 'Supply & Demand Together', 
         description: 'See how supply and demand interact to form equilibrium.',
         type: 'both'
+      },
+      {
+        title: 'Supply Elasticity',
+        description: 'Learn how responsive supply is to changes in price. Supply elasticity measures how much the quantity supplied changes when the price changes.',
+        type: 'supply'
       }
     ],
     quiz: [
@@ -57,6 +62,15 @@ const lawMetadata: CourseMetadata & { content: { lessons: LawLesson[] } } = {
           { text: 'Increased production', isCorrect: false },
         ],
       },
+      {
+        question: 'Which of the following indicates elastic supply?',
+        options: [
+          { text: 'A small change in price causes a large change in quantity supplied', isCorrect: true },
+          { text: 'A large change in price causes a small change in quantity supplied', isCorrect: false },
+          { text: 'Price and quantity change proportionally', isCorrect: false },
+          { text: 'Supply does not change with price', isCorrect: false },
+        ],
+      }
     ]
   }
 };

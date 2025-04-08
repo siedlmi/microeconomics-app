@@ -105,6 +105,7 @@ export default function Sidebar({ completed }: { completed: any }) {
                         <NavLink to="/courses/law-of-supply-and-demand/lesson-1" className={linkClass}>• Lesson 1</NavLink>
                         <NavLink to="/courses/law-of-supply-and-demand/lesson-2" className={linkClass}>• Lesson 2</NavLink>
                         <NavLink to="/courses/law-of-supply-and-demand/lesson-3" className={linkClass}>• Lesson 3</NavLink>
+                        <NavLink to="/courses/law-of-supply-and-demand/lesson-4" className={linkClass}>• Supply Elasticity</NavLink>
                       </div>
                     )}
                   </div>
