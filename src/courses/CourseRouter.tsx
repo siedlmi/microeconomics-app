@@ -36,11 +36,17 @@ export default function CourseRouter({
         }
       />
 
-      {/* === PPC (single-page course) === */}
+      {/* === Production Possibilities Curve === */}
       <Route
         path="ppc"
+        element={<Navigate to="ppc/1" replace />}
+      />
+      <Route
+        path="ppc/:lessonId"
         element={
-          <PPCCourse onComplete={() => setCompleted((s: any) => ({ ...s, ppc: true }))} />
+          <PPCCourse
+            onComplete={() => setCompleted((s: any) => ({ ...s, ppc: true }))}
+          />
         }
       />
     </Routes>

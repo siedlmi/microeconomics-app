@@ -1,63 +1,32 @@
-import { useParams, useNavigate, Navigate } from 'react-router-dom';
-import { useMemo } from 'react';
-import QuizComponent from '../../components/QuizComponent';
-import consumerLessons from './lessons';
-import consumerQuiz from './quiz';
+import { useLang } from '../../i18n';
+import BaseCourse from '../BaseCourse';
+import consumerMetadata from './metadata';
+import { CourseProps } from '../types';
 
-export default function ConsumerCourse({ onComplete }: { onComplete: () => void }) {
-  const { lessonId } = useParams();
-  const navigate = useNavigate();
-
-  const currentIndex = useMemo(() => {
-    const num = parseInt(lessonId?.replace('lesson-', '') || '1', 10);
-    return isNaN(num) ? 0 : num - 1;
-  }, [lessonId]);
-
-  const isQuiz = currentIndex >= consumerLessons.length;
-  const lesson = consumerLessons[currentIndex];
-
-  if (currentIndex < 0 || (!isQuiz && !lesson)) {
-    return <Navigate to="/courses/consumer-choice/lesson-1" replace />;
-  }
-
-  const handleNextLesson = () => {
-    navigate(`/courses/consumer-choice/lesson-${currentIndex + 2}`);
+export default function ConsumerCourse({ onComplete }: CourseProps) {
+  const { lang } = useLang();
+  const metadata = {
+    ...consumerMetadata,
+    title: lang === 'pl' ? 'Teoria Konsumenta' : consumerMetadata.title,
+    description: lang === 'pl' ? 'Poznaj jak konsumenci podejmują decyzje' : consumerMetadata.description,
   };
 
-  const handleStartQuiz = () => {
-    navigate(`/courses/consumer-choice/lesson-${consumerLessons.length + 1}`);
+  const renderLesson = (lessonIndex: number) => {
+    const lesson = metadata.content.lessons[lessonIndex];
+    return (
+      <div className="space-y-4">
+        <div className="prose max-w-none">
+          <p className="text-lg">{lesson.description}</p>
+        </div>
+      </div>
+    );
   };
 
   return (
-    <div>
-      {!isQuiz ? (
-        <>
-          <h1 className="text-2xl font-bold mb-2">{lesson.title}</h1>
-          <p className="mb-4">{lesson.description}</p>
-
-          <div className="mt-6 flex gap-3">
-            {currentIndex < consumerLessons.length - 1 && (
-              <button
-                onClick={handleNextLesson}
-                className="px-4 py-2 bg-indigo-600 text-white rounded"
-              >
-                Next Lesson
-              </button>
-            )}
-            <button
-              onClick={handleStartQuiz}
-              className="px-4 py-2 bg-green-600 text-white rounded"
-            >
-              Start Quiz Now
-            </button>
-          </div>
-        </>
-      ) : (
-        <>
-          <h2 className="text-xl font-bold mb-4">🧠 Quiz: Consumer Choice</h2>
-          <QuizComponent quiz={consumerQuiz} onComplete={onComplete} />
-        </>
-      )}
-    </div>
+    <BaseCourse
+      metadata={metadata}
+      onComplete={onComplete}
+      renderLesson={renderLesson}
+    />
   );
 }

@@ -1,11 +1,30 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect, useRef } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import glossary from '../data/glossaryData';
+import FlashcardsMode from './FlashcardsMode';
 
 const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
 
 export default function Glossary() {
   const [search, setSearch] = useState('');
   const [activeLetter, setActiveLetter] = useState<string | null>(null);
+  const [highlightedTerm, setHighlightedTerm] = useState<string | null>(null);
+  const location = useLocation();
+  const navigate = useNavigate();
+  const termRefs = useRef<{ [key: string]: HTMLLIElement }>({});
+  const [isFlashcardsMode, setIsFlashcardsMode] = useState(false);
+
+  // Handle deep linking and highlighting
+  useEffect(() => {
+    const hash = decodeURIComponent(location.hash.slice(1));
+    if (hash) {
+      setHighlightedTerm(hash);
+      // Scroll to the term
+      setTimeout(() => {
+        termRefs.current[hash]?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 100);
+    }
+  }, [location.hash]);
 
   const filtered = useMemo(() => {
     return glossary
@@ -27,9 +46,22 @@ export default function Glossary() {
     }, {});
   }, [filtered]);
 
+  const handleTermClick = (term: string) => {
+    navigate(`#${encodeURIComponent(term)}`);
+    setHighlightedTerm(term);
+  };
+
   return (
     <div className="max-w-5xl mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-6 text-center">📘 Glossary</h1>
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-3xl font-bold text-center">📘 Glossary</h1>
+        <button
+          onClick={() => setIsFlashcardsMode(true)}
+          className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 flex items-center gap-2"
+        >
+          🔄 Study with Flashcards
+        </button>
+      </div>
 
       <input
         type="text"
@@ -55,11 +87,22 @@ export default function Glossary() {
 
       <div className="space-y-8">
         {Object.entries(grouped).map(([letter, terms]) => (
-          <section key={letter}>
+          <section key={letter} id={`section-${letter}`}>
             <h2 className="text-xl font-semibold border-b pb-1 mb-3">{letter}</h2>
             <ul className="space-y-2">
               {terms.map((entry, i) => (
-                <li key={i}>
+                <li
+                  key={i}
+                  ref={el => {
+                    if (el) termRefs.current[entry.term] = el;
+                  }}
+                  onClick={() => handleTermClick(entry.term)}
+                  className={`p-3 rounded cursor-pointer transition-colors ${
+                    highlightedTerm === entry.term
+                      ? 'bg-yellow-100 shadow-sm'
+                      : 'hover:bg-gray-50'
+                  }`}
+                >
                   <div className="font-semibold">{entry.term}</div>
                   <div className="text-gray-600">{entry.definition}</div>
                 </li>
@@ -72,6 +115,13 @@ export default function Glossary() {
           <p className="text-center text-gray-500">No matching terms found.</p>
         )}
       </div>
+
+      {isFlashcardsMode && (
+        <FlashcardsMode
+          terms={filtered}
+          onClose={() => setIsFlashcardsMode(false)}
+        />
+      )}
     </div>
   );
 }

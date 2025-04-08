@@ -1,46 +1,179 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import GlossaryLink from './GlossaryLink';
 
-export default function QuizComponent({ quiz, onComplete }: { quiz: any[]; onComplete: () => void }) {
-  const [qIndex, setQIndex] = useState(0);
-  const [score, setScore] = useState(0);
-  const [done, setDone] = useState(false);
+interface Option {
+  text: string;
+  isCorrect: boolean;
+}
 
-  const current = quiz[qIndex];
+interface Question {
+  question: string;
+  options: Option[];
+}
 
-  const handleAnswer = (correct: boolean) => {
-    if (correct) setScore(score + 1);
-    if (qIndex + 1 < quiz.length) setQIndex(qIndex + 1);
-    else setDone(true);
+interface QuizProps {
+  quiz: Question[];
+  onComplete: () => void;
+}
+
+export default function QuizComponent({ quiz, onComplete }: QuizProps) {
+  const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [selectedAnswers, setSelectedAnswers] = useState<number[]>(new Array(quiz.length).fill(-1));
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
+  const handleAnswer = (answerIndex: number) => {
+    if (isSubmitted) return;
+    
+    const newAnswers = [...selectedAnswers];
+    newAnswers[currentQuestion] = answerIndex;
+    setSelectedAnswers(newAnswers);
   };
 
-  useEffect(() => {
-    if (done) onComplete();
-  }, [done]);
+  const handleNext = () => {
+    if (currentQuestion < quiz.length - 1) {
+      setCurrentQuestion(currentQuestion + 1);
+    }
+  };
 
-  if (done) {
-    return (
-      <div className="mt-6 p-4 bg-green-100 rounded">
-        <h2 className="text-xl font-bold mb-2">🎉 Quiz Complete!</h2>
-        <p>Your Score: {score} / {quiz.length}</p>
-      </div>
-    );
-  }
+  const handlePrevious = () => {
+    if (currentQuestion > 0) {
+      setCurrentQuestion(currentQuestion - 1);
+    }
+  };
+
+  const handleSubmit = () => {
+    if (selectedAnswers.includes(-1)) {
+      alert('Please answer all questions before submitting.');
+      return;
+    }
+    setIsSubmitted(true);
+    onComplete();
+  };
+
+  const score = isSubmitted
+    ? selectedAnswers.reduce(
+        (acc, answer, index) => (quiz[index].options[answer].isCorrect ? acc + 1 : acc),
+        0
+      )
+    : 0;
+
+  const getAnswerClassName = (questionIndex: number, answerIndex: number) => {
+    if (!isSubmitted) {
+      return selectedAnswers[questionIndex] === answerIndex
+        ? 'bg-blue-100 border-blue-500'
+        : 'hover:bg-gray-50';
+    }
+
+    const option = quiz[questionIndex].options[answerIndex];
+    if (option.isCorrect) {
+      return 'bg-green-100 border-green-500';
+    }
+
+    if (selectedAnswers[questionIndex] === answerIndex) {
+      return 'bg-red-100 border-red-500';
+    }
+
+    return 'opacity-50';
+  };
 
   return (
-    <div className="mt-6 p-4 bg-white rounded shadow">
-      <h3 className="text-lg font-bold mb-2">{current.question}</h3>
-      <ul className="space-y-2">
-        {current.options.map((opt: { text: string; isCorrect: boolean }, i: number) => (
-          <li key={i}>
-            <button
-              onClick={() => handleAnswer(opt.isCorrect)}
-              className="w-full text-left px-4 py-2 border rounded hover:bg-blue-100"
+    <div className="max-w-2xl mx-auto">
+      <div className="mb-4 flex justify-between items-center">
+        <div className="text-sm text-gray-600">
+          Question {currentQuestion + 1} of {quiz.length}
+        </div>
+        {isSubmitted && (
+          <div className="text-sm font-medium">
+            Score: {score}/{quiz.length} ({Math.round((score / quiz.length) * 100)}%)
+          </div>
+        )}
+      </div>
+
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={currentQuestion}
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: -20 }}
+          className="mb-6"
+        >
+          <h3 className="text-lg font-medium mb-4">{quiz[currentQuestion].question}</h3>
+          <div className="space-y-2">
+            {quiz[currentQuestion].options.map((option, index) => (
+              <button
+                key={index}
+                onClick={() => handleAnswer(index)}
+                className={`w-full p-3 text-left border rounded transition-colors ${getAnswerClassName(
+                  currentQuestion,
+                  index
+                )}`}
+                disabled={isSubmitted}
+              >
+                {option.text}
+              </button>
+            ))}
+          </div>
+
+          {isSubmitted && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              className="mt-4 p-4 bg-blue-50 rounded-lg"
             >
-              {opt.text}
-            </button>
-          </li>
-        ))}
-      </ul>
+              <h4 className="font-medium mb-2">Explanation:</h4>
+              <p className="text-gray-700">
+                The correct answer is: {quiz[currentQuestion].options.find(opt => opt.isCorrect)?.text}
+              </p>
+            </motion.div>
+          )}
+        </motion.div>
+      </AnimatePresence>
+
+      <div className="flex justify-between items-center">
+        <div className="space-x-2">
+          <button
+            onClick={handlePrevious}
+            disabled={currentQuestion === 0}
+            className="px-4 py-2 bg-gray-100 rounded disabled:opacity-50"
+          >
+            Previous
+          </button>
+          <button
+            onClick={handleNext}
+            disabled={currentQuestion === quiz.length - 1}
+            className="px-4 py-2 bg-gray-100 rounded disabled:opacity-50"
+          >
+            Next
+          </button>
+        </div>
+
+        {!isSubmitted && selectedAnswers[currentQuestion] !== -1 && (
+          <button
+            onClick={handleSubmit}
+            className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+          >
+            Submit Quiz
+          </button>
+        )}
+      </div>
+
+      {isSubmitted && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mt-6 p-4 bg-gray-50 rounded-lg"
+        >
+          <h3 className="font-medium mb-2">Quiz Complete!</h3>
+          <p>
+            You scored {score} out of {quiz.length} ({Math.round((score / quiz.length) * 100)}%)
+          </p>
+          <p className="text-sm text-gray-600 mt-2">
+            Review your answers above. Terms are linked to the{' '}
+            <GlossaryLink term="Glossary">glossary</GlossaryLink> for further study.
+          </p>
+        </motion.div>
+      )}
     </div>
   );
 }

@@ -17,6 +17,15 @@ const lawQuiz = [
         { text: 'Koszt produkcji', isCorrect: false },
       ],
     },
+    {
+      question: 'Co powoduje niedobór na rynku konkurencyjnym?',
+      options: [
+        { text: 'Cena powyżej równowagi', isCorrect: false },
+        { text: 'Cena poniżej równowagi', isCorrect: true },
+        { text: 'Podaż równa popytowi', isCorrect: false },
+        { text: 'Zwiększona produkcja', isCorrect: false },
+      ],
+    },
   ];
   
   export default lawQuiz;

@@ -1,27 +1,63 @@
-import { useState } from 'react';
-import QuizComponent from '../../components/QuizComponent';
-import ppcQuiz from './quiz';
+import BaseCourse from '../BaseCourse';
 import PPCGraph from './PPCLesson';
+import ppcMetadata from './metadata';
+import { CourseProps } from '../types';
 
-export default function PPCCourse({ onComplete }: { onComplete: () => void }) {
-  const [quizStarted, setQuizStarted] = useState(false);
+export default function PPCCourse({ onComplete }: CourseProps) {
+  const renderLesson = (lessonIndex: number) => {
+    switch (lessonIndex) {
+      case 0:
+        return (
+          <>
+            <p className="mb-4">
+              The Production Possibilities Curve (PPC) shows the maximum possible production combinations 
+              of two goods using available resources and technology.
+            </p>
+            <PPCGraph />
+          </>
+        );
+      case 1:
+        return (
+          <>
+            <p className="mb-4">
+              Opportunity cost is what must be given up to obtain something else. On the PPC, 
+              it's shown by the slope at any point, representing how much of one good must be 
+              sacrificed to produce more of another.
+            </p>
+            <PPCGraph />
+          </>
+        );
+      case 2:
+        return (
+          <>
+            <p className="mb-4">
+              Points on the curve represent efficient production, while points inside show 
+              underutilization of resources. Points outside the curve are unattainable with 
+              current resources and technology.
+            </p>
+            <PPCGraph />
+          </>
+        );
+      case 3:
+        return (
+          <>
+            <p className="mb-4">
+              Economic growth, technological improvements, or increases in resources can shift 
+              the entire PPC outward, allowing for higher production possibilities of both goods.
+            </p>
+            <PPCGraph />
+          </>
+        );
+      default:
+        return null;
+    }
+  };
 
   return (
-    <div>
-      <h1 className="text-2xl font-bold mb-4">Production Possibility Curve (PPC)</h1>
-      <p className="mb-4">
-        The PPC shows the trade-offs and opportunity costs of producing two goods using limited resources.
-      </p>
-      <PPCGraph />
-      {!quizStarted && (
-        <button
-          onClick={() => setQuizStarted(true)}
-          className="mt-6 px-4 py-2 bg-indigo-600 text-white rounded"
-        >
-          Start Quiz
-        </button>
-      )}
-      {quizStarted && <QuizComponent quiz={ppcQuiz} onComplete={onComplete} />}
-    </div>
+    <BaseCourse
+      metadata={ppcMetadata}
+      onComplete={onComplete}
+      renderLesson={renderLesson}
+    />
   );
 }

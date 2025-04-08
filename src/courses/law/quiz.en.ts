@@ -17,6 +17,15 @@ const lawQuiz = [
         { text: 'Cost of production', isCorrect: false },
       ],
     },
+    {
+      question: 'In a competitive market, what causes a shortage?',
+      options: [
+        { text: 'Price above equilibrium', isCorrect: false },
+        { text: 'Price below equilibrium', isCorrect: true },
+        { text: 'Supply equals demand', isCorrect: false },
+        { text: 'Increased production', isCorrect: false },
+      ],
+    },
   ];
   
   export default lawQuiz;
