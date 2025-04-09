@@ -45,7 +45,7 @@ export default function BaseCourse({
   const currentLesson = !isQuiz ? metadata.content.lessons[currentLessonIndex] : null;
 
   return (
-    <div className="max-w-4xl mx-auto p-4">
+    <div className="max-w-4xl mx-auto p-4 pt-20">
       <ProgressTracker 
         courseId={metadata.id}
         currentLesson={isQuiz ? metadata.content.lessons.length + 1 : currentLessonIndex + 1}

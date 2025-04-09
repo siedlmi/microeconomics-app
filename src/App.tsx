@@ -17,9 +17,9 @@ export default function App() {
   return (
     <LanguageProvider>
       <Router>
-        <div className="min-h-screen bg-gray-50">
+        <div className="min-h-screen bg-gray-50 flex flex-col">
           <Banner />
-          <div className="flex flex-col md:flex-row pt-16">
+          <div className="flex flex-1">
             <Sidebar completed={completed}>
               <div></div>
             </Sidebar>
