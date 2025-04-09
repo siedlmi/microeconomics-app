@@ -87,11 +87,11 @@ export default function Sidebar({ children, completed }: SidebarProps) {
 
   return (
     <SidebarContext.Provider value={{ isOpen, isMobile, toggleSidebar }}>
-      <div className="flex h-screen bg-gray-50">
+      <div className="flex h-screen bg-gray-50 dark:bg-gray-800">
         {/* Mobile menu button */}
         <button
           onClick={toggleSidebar}
-          className="fixed top-4 left-4 z-50 p-2 rounded-md text-gray-500 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500 md:hidden"
+          className="fixed top-4 left-4 z-50 p-2 rounded-md text-gray-500 dark:text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500 md:hidden"
         >
           {isOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
@@ -100,10 +100,10 @@ export default function Sidebar({ children, completed }: SidebarProps) {
         <div
           className={`fixed inset-y-0 left-0 transform ${
             isOpen ? 'translate-x-0' : '-translate-x-full'
-          } md:translate-x-0 transition-transform duration-300 ease-in-out z-40 w-64 bg-white shadow-lg`}
+          } md:translate-x-0 transition-transform duration-300 ease-in-out z-40 w-64 bg-white dark:bg-gray-800 shadow-lg`}
         >
           <div className="flex flex-col h-full">
-            <div className="flex items-center h-16 px-4 bg-indigo-600">
+            <div className="flex items-center h-16 px-4 bg-indigo-600 dark:bg-indigo-700">
               <h1 className="text-xl font-bold text-white text-left">Microeconomics App</h1>
             </div>
             <nav className="flex-1 px-2 py-4 space-y-1 overflow-y-auto">
@@ -111,8 +111,8 @@ export default function Sidebar({ children, completed }: SidebarProps) {
                 to="/"
                 className={`flex items-center px-4 py-2 text-sm font-medium rounded-md text-left ${
                   location.pathname === '/'
-                    ? 'bg-indigo-100 text-indigo-700'
-                    : 'text-gray-600 hover:bg-gray-50'
+                    ? 'bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-200'
+                    : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
                 }`}
               >
                 {t.dashboard}
@@ -122,7 +122,7 @@ export default function Sidebar({ children, completed }: SidebarProps) {
               <div className="space-y-1">
                 <button
                   onClick={() => setCoursesOpen(!coursesOpen)}
-                  className="flex items-center justify-between w-full px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 rounded-md text-left"
+                  className="flex items-center justify-between w-full px-4 py-2 text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-md text-left"
                 >
                   <span>{t.courses}</span>
                   {coursesOpen ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
@@ -134,7 +134,7 @@ export default function Sidebar({ children, completed }: SidebarProps) {
                     <div>
                       <button
                         onClick={() => setOpenCourse(openCourse === 'law' ? null : 'law')}
-                        className="flex items-center justify-between w-full px-4 py-2 text-sm text-indigo-600 hover:bg-gray-50 rounded-md text-left"
+                        className="flex items-center justify-between w-full px-4 py-2 text-sm text-indigo-600 dark:text-indigo-400 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-md text-left"
                       >
                         <span>{t.law} {completed.law && '✅'}</span>
                         {openCourse === 'law' ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
@@ -150,7 +150,7 @@ export default function Sidebar({ children, completed }: SidebarProps) {
                     <div>
                       <button
                         onClick={() => setOpenCourse(openCourse === 'consumer' ? null : 'consumer')}
-                        className="flex items-center justify-between w-full px-4 py-2 text-sm text-indigo-600 hover:bg-gray-50 rounded-md text-left"
+                        className="flex items-center justify-between w-full px-4 py-2 text-sm text-indigo-600 dark:text-indigo-400 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-md text-left"
                       >
                         <span>{t.consumer} {completed.consumer && '✅'}</span>
                         {openCourse === 'consumer' ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
@@ -166,7 +166,7 @@ export default function Sidebar({ children, completed }: SidebarProps) {
                     <div>
                       <button
                         onClick={() => setOpenCourse(openCourse === 'ppc' ? null : 'ppc')}
-                        className="flex items-center justify-between w-full px-4 py-2 text-sm text-indigo-600 hover:bg-gray-50 rounded-md text-left"
+                        className="flex items-center justify-between w-full px-4 py-2 text-sm text-indigo-600 dark:text-indigo-400 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-md text-left"
                       >
                         <span>{t.ppc} {completed.ppc && '✅'}</span>
                         {openCourse === 'ppc' ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
@@ -185,8 +185,8 @@ export default function Sidebar({ children, completed }: SidebarProps) {
                 to="/glossary"
                 className={`flex items-center px-4 py-2 text-sm font-medium rounded-md text-left ${
                   location.pathname === '/glossary'
-                    ? 'bg-indigo-100 text-indigo-700'
-                    : 'text-gray-600 hover:bg-gray-50'
+                    ? 'bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-200'
+                    : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
                 }`}
               >
                 {t.glossary}
@@ -195,8 +195,8 @@ export default function Sidebar({ children, completed }: SidebarProps) {
                 to="/profile"
                 className={`flex items-center px-4 py-2 text-sm font-medium rounded-md text-left ${
                   location.pathname === '/profile'
-                    ? 'bg-indigo-100 text-indigo-700'
-                    : 'text-gray-600 hover:bg-gray-50'
+                    ? 'bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-200'
+                    : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
                 }`}
               >
                 {t.profile}
@@ -204,7 +204,7 @@ export default function Sidebar({ children, completed }: SidebarProps) {
             </nav>
 
             {/* Language Switcher */}
-            <div className="px-4 py-4 border-t border-gray-200">
+            <div className="px-4 py-4 border-t border-gray-200 dark:border-gray-700">
               <div className="flex space-x-4">
                 <button
                   onClick={() => switchLanguage('en')}
