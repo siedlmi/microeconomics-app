@@ -24,9 +24,7 @@ export default function App() {
           <div className="h-screen flex flex-col bg-gray-50 dark:bg-gray-800">
             <Banner />
             <div className="flex-1 flex min-h-0">
-              <Sidebar completed={completed}>
-                <div></div>
-              </Sidebar>
+              <Sidebar />
               <MainContent>
                 <div className="h-full overflow-y-auto">
                   <div className="max-w-4xl mx-auto p-4 pt-20">
