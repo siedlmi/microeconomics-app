@@ -11,6 +11,7 @@ import Glossary from './components/Glossary';
 import GlossaryTerm from './components/GlossaryTerm';
 import Profile from './components/Profile';
 import Settings from './components/Settings';
+import CourseCatalog from './components/CourseCatalog';
 import './App.css';
 
 export default function App() {
@@ -32,6 +33,7 @@ export default function App() {
                     <Routes>
                       <Route path="/" element={<Dashboard />} />
                       <Route path="/courses/*" element={<CourseRouter setCompleted={setCompleted} />} />
+                      <Route path="/catalog" element={<CourseCatalog />} />
                       <Route path="/glossary" element={<Glossary />} />
                       <Route path="/glossary/:term" element={<GlossaryTerm />} />
                       <Route path="/profile" element={<Profile />} />

@@ -13,6 +13,11 @@ const lawMetadata: CourseMetadata & { content: { lessons: LawLesson[] } } = {
   description: 'Learn how prices are determined in competitive markets',
   content: {
     lessons: [
+      {
+        title: 'Demand Schedule and Curve',
+        description: 'Learn how to create and interpret demand schedules and curves. Understand the relationship between price and quantity demanded.',
+        type: 'demand'
+      },
       { 
         title: 'Supply vs Price', 
         description: 'Explore how supply changes with price.',

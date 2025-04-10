@@ -1,11 +1,35 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useLang } from '../i18n';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
+import lawMetadata from '../courses/law-of-supply-and-demand/metadata';
+import consumerMetadata from '../courses/consumer-choice/metadata';
+import ppcMetadata from '../courses/production-possibilities-curve/metadata';
+
+const courseMetadata = {
+  'law-of-supply-and-demand': lawMetadata,
+  'consumer-choice': consumerMetadata,
+  'production-possibilities-curve': ppcMetadata,
+};
 
 export default function Banner() {
-  const { t } = useLang();
+  const { t, lang } = useLang();
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const location = useLocation();
+
+  const getCurrentCourse = () => {
+    const pathParts = location.pathname.split('/');
+    if (pathParts.length > 2 && pathParts[1] === 'courses') {
+      const courseId = pathParts[2];
+      const metadata = courseMetadata[courseId as keyof typeof courseMetadata];
+      if (metadata) {
+        return metadata.title;
+      }
+    }
+    return null;
+  };
+
+  const currentCourse = getCurrentCourse();
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -33,7 +57,12 @@ export default function Banner() {
                   <path d="M2 12L12 17L22 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
               </div>
-              <h1 className="text-xl font-bold text-white tracking-tight">Microeconomics App</h1>
+              <div className="flex flex-col">
+                <h1 className="text-xl font-bold text-white tracking-tight">Microeconomics App</h1>
+                {currentCourse && (
+                  <span className="text-sm text-indigo-200">{currentCourse}</span>
+                )}
+              </div>
             </Link>
           </div>
           <div className="flex items-center space-x-4">

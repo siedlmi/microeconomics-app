@@ -80,6 +80,8 @@ export default function QuizComponent({ quiz, onComplete }: QuizProps) {
     return 'opacity-50';
   };
 
+  const allQuestionsAnswered = !selectedAnswers.includes(-1);
+
   return (
     <div className="max-w-2xl mx-auto">
       <div className="mb-4 flex justify-between items-center">
@@ -151,7 +153,7 @@ export default function QuizComponent({ quiz, onComplete }: QuizProps) {
           </button>
         </div>
 
-        {!isSubmitted && selectedAnswers[currentQuestion] !== -1 && (
+        {!isSubmitted && allQuestionsAnswered && (
           <button
             onClick={handleSubmit}
             className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"

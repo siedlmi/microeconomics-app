@@ -4,6 +4,7 @@ import DemandSupplyGraph from '../../components/DemandSupplyGraph';
 import lawMetadata from './metadata';
 import { CourseProps } from '../types';
 import { LawLesson } from './metadata';
+import DemandScheduleLesson from './lessons/demand-schedule';
 
 export default function LawCourse({ onComplete }: CourseProps) {
   const { lang } = useLang();
@@ -15,6 +16,12 @@ export default function LawCourse({ onComplete }: CourseProps) {
 
   const renderLesson = (lessonIndex: number) => {
     const lesson = metadata.content.lessons[lessonIndex] as LawLesson;
+    
+    // Special case for the demand schedule lesson
+    if (lesson.title === 'Demand Schedule and Curve') {
+      return <DemandScheduleLesson />;
+    }
+
     return (
       <div className="space-y-4">
         <div className="prose max-w-none">
