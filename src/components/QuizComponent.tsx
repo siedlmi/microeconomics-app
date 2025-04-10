@@ -48,6 +48,9 @@ export default function QuizComponent({ quiz, onComplete }: QuizProps) {
       return;
     }
     setIsSubmitted(true);
+  };
+
+  const handleContinue = () => {
     onComplete();
   };
 
@@ -172,6 +175,49 @@ export default function QuizComponent({ quiz, onComplete }: QuizProps) {
             Review your answers above. Terms are linked to the{' '}
             <GlossaryLink term="Glossary">glossary</GlossaryLink> for further study.
           </p>
+          <button
+            onClick={handleContinue}
+            className="mt-4 px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
+          >
+            Continue
+          </button>
+        </motion.div>
+      )}
+
+      {isSubmitted && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mt-6 space-y-6"
+        >
+          <h3 className="text-lg font-medium">Quiz Summary</h3>
+          {quiz.map((question, questionIndex) => (
+            <div key={questionIndex} className="p-4 bg-white rounded-lg shadow-sm">
+              <h4 className="font-medium mb-3">{question.question}</h4>
+              <div className="space-y-2">
+                {question.options.map((option, optionIndex) => (
+                  <div
+                    key={optionIndex}
+                    className={`p-3 border rounded ${
+                      option.isCorrect
+                        ? 'bg-green-100 border-green-500'
+                        : selectedAnswers[questionIndex] === optionIndex
+                        ? 'bg-red-100 border-red-500'
+                        : 'border-gray-200'
+                    }`}
+                  >
+                    {option.text}
+                    {option.isCorrect && (
+                      <span className="ml-2 text-green-600 font-medium">✓ Correct Answer</span>
+                    )}
+                    {selectedAnswers[questionIndex] === optionIndex && !option.isCorrect && (
+                      <span className="ml-2 text-red-600 font-medium">✗ Your Answer</span>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
         </motion.div>
       )}
     </div>
