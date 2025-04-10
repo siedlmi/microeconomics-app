@@ -1,3 +1,5 @@
+export type CourseId = 'law-of-supply-and-demand' | 'consumer-choice' | 'production-possibilities-curve' | 'market-structures';
+
 export interface Lesson {
   title: string;
   description: string;
@@ -18,15 +20,13 @@ export interface CourseContent {
   quiz: QuizQuestion[];
 }
 
-export interface CourseProps {
-  onComplete: () => void;
-}
-
-export type CourseId = 'consumer-choice' | 'production-possibilities-curve' | 'law-of-supply-and-demand';
-
 export interface CourseMetadata {
   id: CourseId;
   title: string;
   description: string;
   content: CourseContent;
+}
+
+export interface CourseProps {
+  onComplete: () => void;
 } 

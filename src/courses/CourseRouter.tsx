@@ -2,6 +2,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import LawCourse from './law-of-supply-and-demand';
 import PPCCourse from './production-possibilities-curve';
 import ConsumerCourse from './consumer-choice';
+import MarketStructuresCourse from './market-structures';
 
 export default function CourseRouter({
   setCompleted,
@@ -46,6 +47,20 @@ export default function CourseRouter({
         element={
           <PPCCourse
             onComplete={() => setCompleted((s: any) => ({ ...s, ppc: true }))}
+          />
+        }
+      />
+
+      {/* === Market Structures === */}
+      <Route
+        path="market-structures"
+        element={<Navigate to="market-structures/lesson-1" replace />}
+      />
+      <Route
+        path="market-structures/:lessonId"
+        element={
+          <MarketStructuresCourse
+            onComplete={() => setCompleted((s: any) => ({ ...s, marketStructures: true }))}
           />
         }
       />

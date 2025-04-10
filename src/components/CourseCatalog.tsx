@@ -2,8 +2,9 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useLang } from '../i18n';
 import lawMetadata from '../courses/law-of-supply-and-demand/metadata';
-import consumerMetadata from '../courses/consumer-choice/metadata';
 import ppcMetadata from '../courses/production-possibilities-curve/metadata';
+import consumerMetadata from '../courses/consumer-choice/metadata';
+import marketStructuresMetadata from '../courses/market-structures/metadata';
 
 const courses = [
   {
@@ -12,14 +13,19 @@ const courses = [
     image: '📈',
   },
   {
+    id: 'production-possibilities-curve',
+    metadata: ppcMetadata,
+    image: '📊',
+  },
+  {
     id: 'consumer-choice',
     metadata: consumerMetadata,
     image: '🛒',
   },
   {
-    id: 'production-possibilities-curve',
-    metadata: ppcMetadata,
-    image: '📊',
+    id: 'market-structures',
+    metadata: marketStructuresMetadata,
+    image: '🏢',
   },
 ];
 
@@ -27,9 +33,8 @@ export default function CourseCatalog() {
   const { t } = useLang();
   const [searchQuery, setSearchQuery] = useState('');
 
-  const filteredCourses = courses.filter(course =>
-    course.metadata.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    course.metadata.description.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredCourses = courses.filter((course) =>
+    course.metadata.title.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
