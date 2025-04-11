@@ -39,7 +39,11 @@ export default function BaseCourse({
 
   const handleQuizComplete = () => {
     onComplete();
-    navigate('/courses');
+    navigate('/catalog');
+  };
+
+  const handleExit = () => {
+    navigate('/catalog');
   };
 
   const currentLesson = !isQuiz ? metadata.content.lessons[currentLessonIndex] : null;
@@ -50,6 +54,7 @@ export default function BaseCourse({
         courseId={metadata.id}
         currentLesson={isQuiz ? metadata.content.lessons.length + 1 : currentLessonIndex + 1}
         totalLessons={metadata.content.lessons.length}
+        onExit={handleExit}
       />
       
       {!isQuiz && currentLesson ? (

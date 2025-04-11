@@ -1,12 +1,14 @@
 import { useEffect, useState } from 'react';
+import { X } from 'lucide-react';
 
 interface ProgressTrackerProps {
   courseId: string;
   totalLessons: number;
   currentLesson: number;
+  onExit?: () => void;
 }
 
-export default function ProgressTracker({ courseId, totalLessons, currentLesson }: ProgressTrackerProps) {
+export default function ProgressTracker({ courseId, totalLessons, currentLesson, onExit }: ProgressTrackerProps) {
   const [completedLessons, setCompletedLessons] = useState<number[]>([]);
 
   useEffect(() => {
@@ -31,7 +33,18 @@ export default function ProgressTracker({ courseId, totalLessons, currentLesson 
   return (
     <div className="mb-6">
       <div className="flex items-center justify-between mb-2">
-        <h3 className="text-lg font-semibold">Course Progress</h3>
+        <div className="flex items-center gap-2">
+          <h3 className="text-lg font-semibold">Course Progress</h3>
+          {onExit && (
+            <button
+              onClick={onExit}
+              className="p-1 hover:bg-gray-100 rounded-full transition-colors"
+              aria-label="Exit lesson"
+            >
+              <X className="w-4 h-4 text-gray-500" />
+            </button>
+          )}
+        </div>
         <span className="text-sm text-gray-600">
           {completedLessons.length} of {totalLessons} lessons completed
         </span>
