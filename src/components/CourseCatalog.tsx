@@ -5,7 +5,7 @@ import lawMetadata from '../courses/law-of-supply-and-demand/metadata';
 import ppcMetadata from '../courses/production-possibilities-curve/metadata';
 import consumerMetadata from '../courses/consumer-choice/metadata';
 import marketStructuresMetadata from '../courses/market-structures/metadata';
-
+import marketFailuresMetadata from '../courses/market-failures/metadata';
 const courses = [
   {
     id: 'law-of-supply-and-demand',
@@ -26,6 +26,11 @@ const courses = [
     id: 'market-structures',
     metadata: marketStructuresMetadata,
     image: '🏢',
+  },
+  {
+    id: 'market-failures',
+    metadata: marketFailuresMetadata,
+    image: '🚫',
   },
 ];
 

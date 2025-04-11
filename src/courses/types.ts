@@ -1,4 +1,4 @@
-export type CourseId = 'law-of-supply-and-demand' | 'consumer-choice' | 'production-possibilities-curve' | 'market-structures';
+export type CourseId = 'law-of-supply-and-demand' | 'consumer-choice' | 'production-possibilities-curve' | 'market-structures' | 'market-failures';
 
 export interface Lesson {
   title: string;

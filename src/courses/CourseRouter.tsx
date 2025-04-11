@@ -3,6 +3,8 @@ import LawCourse from './law-of-supply-and-demand';
 import PPCCourse from './production-possibilities-curve';
 import ConsumerCourse from './consumer-choice';
 import MarketStructuresCourse from './market-structures';
+import MarketFailuresCourse from './market-failures';
+
 
 export default function CourseRouter({
   setCompleted,
@@ -51,8 +53,21 @@ export default function CourseRouter({
         }
       />
 
-      {/* === Market Structures === */}
+      {/* === Market failures === */}
       <Route
+        path="market-failures"
+        element={<Navigate to="market-failures/lesson-1" replace />}
+      />
+      <Route
+        path="market-failures/:lessonId"
+        element={
+          <MarketFailuresCourse
+            onComplete={() => setCompleted((s: any) => ({ ...s, marketFailurse: true }))}
+          />
+        }
+      />
+            {/* === Market Structures === */}
+            <Route
         path="market-structures"
         element={<Navigate to="market-structures/lesson-1" replace />}
       />
