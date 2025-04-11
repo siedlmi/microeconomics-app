@@ -1,84 +1,49 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
-import LawCourse from './law-of-supply-and-demand';
-import PPCCourse from './production-possibilities-curve';
-import ConsumerCourse from './consumer-choice';
-import MarketStructuresCourse from './market-structures';
-import MarketFailuresCourse from './market-failures';
+import { Routes, Route, Navigate, useParams } from 'react-router-dom';
+import { CourseMetadata } from './types';
+import BaseCourse from './BaseCourse';
+import CourseRoadmap from '../components/CourseRoadmap';
 
+interface CourseRouterProps {
+  metadata: CourseMetadata;
+  onComplete: () => void;
+  renderLesson: (lessonIndex: number) => React.ReactNode;
+}
 
-export default function CourseRouter({
-  setCompleted,
-}: {
-  setCompleted: (state: any) => void;
-}) {
+export default function CourseRouter({ metadata, onComplete, renderLesson }: CourseRouterProps) {
+  const { courseId } = useParams<{ courseId: string }>();
+
+  // If the courseId doesn't match, redirect to the correct course
+  if (courseId && courseId !== metadata.id) {
+    return <Navigate to={`/courses/${metadata.id}`} replace />;
+  }
+
   return (
     <Routes>
-      {/* === Law of Supply and Demand === */}
-      <Route
-        path="law-of-supply-and-demand"
-        element={<Navigate to="law-of-supply-and-demand/lesson-1" replace />}
+      <Route 
+        path="/" 
+        element={<CourseRoadmap metadata={metadata} />} 
       />
-      <Route
-        path="law-of-supply-and-demand/:lessonId"
+      <Route 
+        path="lesson-:lessonId" 
         element={
-          <LawCourse onComplete={() => setCompleted((s: any) => ({ ...s, law: true }))} />
-        }
-      />
-
-      {/* === Consumer Choice === */}
-      <Route
-        path="consumer-choice"
-        element={<Navigate to="consumer-choice/lesson-1" replace />}
-      />
-      <Route
-        path="consumer-choice/:lessonId"
-        element={
-          <ConsumerCourse
-            onComplete={() => setCompleted((s: any) => ({ ...s, consumer: true }))}
+          <BaseCourse 
+            metadata={metadata} 
+            onComplete={onComplete} 
+            renderLesson={renderLesson} 
           />
-        }
+        } 
       />
-
-      {/* === Production Possibilities Curve === */}
-      <Route
-        path="production-possibilities-curve"
-        element={<Navigate to="production-possibilities-curve/1" replace />}
-      />
-      <Route
-        path="production-possibilities-curve/:lessonId"
+      <Route 
+        path="quiz" 
         element={
-          <PPCCourse
-            onComplete={() => setCompleted((s: any) => ({ ...s, ppc: true }))}
+          <BaseCourse 
+            metadata={metadata} 
+            onComplete={onComplete} 
+            renderLesson={renderLesson} 
           />
-        }
+        } 
       />
-
-      {/* === Market failures === */}
-      <Route
-        path="market-failures"
-        element={<Navigate to="market-failures/lesson-1" replace />}
-      />
-      <Route
-        path="market-failures/:lessonId"
-        element={
-          <MarketFailuresCourse
-            onComplete={() => setCompleted((s: any) => ({ ...s, marketFailurse: true }))}
-          />
-        }
-      />
-            {/* === Market Structures === */}
-            <Route
-        path="market-structures"
-        element={<Navigate to="market-structures/lesson-1" replace />}
-      />
-      <Route
-        path="market-structures/:lessonId"
-        element={
-          <MarketStructuresCourse
-            onComplete={() => setCompleted((s: any) => ({ ...s, marketStructures: true }))}
-          />
-        }
-      />
+      <Route path="*" element={<Navigate to={`/courses/${metadata.id}`} replace />} />
     </Routes>
   );
 }
