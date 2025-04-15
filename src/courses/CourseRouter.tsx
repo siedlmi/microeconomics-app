@@ -1,10 +1,15 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import LawCourse from './law-of-supply-and-demand';
 import PPCCourse from './production-possibilities-curve';
 import ConsumerCourse from './consumer-choice';
 import MarketStructuresCourse from './market-structures';
 import MarketFailuresCourse from './market-failures';
-
+import CourseLayout from './CourseLayout';
+import lawMetadata from './law-of-supply-and-demand/metadata';
+import ppcMetadata from './production-possibilities-curve/metadata';
+import consumerMetadata from './consumer-choice/metadata';
+import marketStructuresMetadata from './market-structures/metadata';
+import marketFailuresMetadata from './market-failures/metadata';
 
 export default function CourseRouter({
   setCompleted,
@@ -16,7 +21,7 @@ export default function CourseRouter({
       {/* === Law of Supply and Demand === */}
       <Route
         path="law-of-supply-and-demand"
-        element={<Navigate to="law-of-supply-and-demand/lesson-1" replace />}
+        element={<CourseLayout metadata={lawMetadata}><></></CourseLayout>}
       />
       <Route
         path="law-of-supply-and-demand/:lessonId"
@@ -28,7 +33,7 @@ export default function CourseRouter({
       {/* === Consumer Choice === */}
       <Route
         path="consumer-choice"
-        element={<Navigate to="consumer-choice/lesson-1" replace />}
+        element={<CourseLayout metadata={consumerMetadata}><></></CourseLayout>}
       />
       <Route
         path="consumer-choice/:lessonId"
@@ -42,7 +47,7 @@ export default function CourseRouter({
       {/* === Production Possibilities Curve === */}
       <Route
         path="production-possibilities-curve"
-        element={<Navigate to="production-possibilities-curve/1" replace />}
+        element={<CourseLayout metadata={ppcMetadata}><></></CourseLayout>}
       />
       <Route
         path="production-possibilities-curve/:lessonId"
@@ -56,7 +61,7 @@ export default function CourseRouter({
       {/* === Market failures === */}
       <Route
         path="market-failures"
-        element={<Navigate to="market-failures/lesson-1" replace />}
+        element={<CourseLayout metadata={marketFailuresMetadata}><></></CourseLayout>}
       />
       <Route
         path="market-failures/:lessonId"
@@ -66,10 +71,11 @@ export default function CourseRouter({
           />
         }
       />
-            {/* === Market Structures === */}
-            <Route
+
+      {/* === Market Structures === */}
+      <Route
         path="market-structures"
-        element={<Navigate to="market-structures/lesson-1" replace />}
+        element={<CourseLayout metadata={marketStructuresMetadata}><></></CourseLayout>}
       />
       <Route
         path="market-structures/:lessonId"

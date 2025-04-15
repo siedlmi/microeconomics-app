@@ -74,7 +74,7 @@ export default function CourseCatalog() {
         {filteredCourses.map((course) => (
           <Link
             key={course.id}
-            to={`/courses/${course.id}/lesson-1`}
+            to={`/courses/${course.id}`}
             className="block p-6 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200"
           >
             <div className="flex items-center space-x-4">
@@ -99,4 +99,4 @@ export default function CourseCatalog() {
       )}
     </div>
   );
-} 
+}
