@@ -86,7 +86,7 @@ export default function CourseCatalog() {
             </div>
             <div className="mt-4 flex items-center justify-between text-sm text-gray-500">
               <span>{course.metadata.content.lessons.length} lessons</span>
-              <span className="text-indigo-600 hover:text-indigo-700">Start Course →</span>
+              <span className="text-indigo-600 hover:text-indigo-700">View Course →</span>
             </div>
           </Link>
         ))}
