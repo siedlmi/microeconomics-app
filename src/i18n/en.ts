@@ -3,6 +3,7 @@ const en = {
     glossary: "Glossary",
     profile: "Profile",
     courses: "Courses",
+    settings: "Settings",
     law: "Law of Supply and Demand",
     ppc: "Production Possibility Curve",
     consumer: "Consumer Choice",
@@ -12,4 +13,3 @@ const en = {
   };
   
   export default en;
-  

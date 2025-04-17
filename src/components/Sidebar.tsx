@@ -1,18 +1,29 @@
 import React, { useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, ChevronLeft, ChevronRight, BookOpen, Home, Bookmark, Settings, User } from 'lucide-react';
+import { Menu, X, ChevronLeft, ChevronRight, BookOpen, Home, Bookmark, Settings, User, LucideIcon } from 'lucide-react';
 import { useLang } from '../i18n';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSidebar } from '../contexts/SidebarContext';
 import { useTheme } from '../contexts/ThemeContext';
 
-const navItems = [
+type NavLabel = 'dashboard' | 'glossary' | 'profile' | 'courses' | 'settings';
+
+const navItems: Array<{
+  path: string;
+  icon: LucideIcon;
+  label: NavLabel;
+  tooltip: string;
+}> = [
   { path: '/', icon: Home, label: 'dashboard', tooltip: 'Dashboard' },
   { path: '/catalog', icon: BookOpen, label: 'courses', tooltip: 'Course Catalog' },
   { path: '/glossary', icon: Bookmark, label: 'glossary', tooltip: 'Glossary' },
   { path: '/profile', icon: User, label: 'profile', tooltip: 'Profile' },
   { path: '/settings', icon: Settings, label: 'settings', tooltip: 'Settings' },
 ];
+
+const IconWrapper = ({ icon: Icon, className }: { icon: LucideIcon, className?: string }) => {
+  return <Icon className={className} />;
+};
 
 export default function Sidebar() {
   const { t, lang } = useLang();
@@ -92,7 +103,7 @@ export default function Sidebar() {
         transition={{ duration: 0.2, ease: "easeInOut" }}
         className={`fixed top-16 h-[calc(100vh-4rem)] bg-white dark:bg-gray-800 shadow-lg z-40 
           flex flex-col ${isCollapsed ? 'w-20' : 'w-64'} transform lg:translate-x-0
-          ${lang === 'ar' ? 'right-0 left-auto' : 'left-0'}`}
+          ${lang === 'pl' ? 'right-0 left-auto' : 'left-0'}`}
       >
         {/* Header with toggle buttons */}
         <div className="p-4 flex items-center justify-between border-b dark:border-gray-700">
@@ -122,7 +133,6 @@ export default function Sidebar() {
         {/* Navigation items */}
         <nav className="flex-1 overflow-y-auto py-4">
           {navItems.map((item) => {
-            const Icon = item.icon;
             const active = isActive(item.path);
             
             return (
@@ -134,7 +144,10 @@ export default function Sidebar() {
                   hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-colors relative group`}
                 onClick={() => window.innerWidth < 768 && toggleSidebar()}
               >
-                <Icon className={`w-6 h-6 ${active ? 'text-indigo-600 dark:text-indigo-400' : ''}`} />
+                <IconWrapper 
+                  icon={item.icon} 
+                  className={`w-6 h-6 ${active ? 'text-indigo-600 dark:text-indigo-400' : ''}`}
+                />
                 {!isCollapsed && (
                   <span className="ml-3">{t[item.label]}</span>
                 )}

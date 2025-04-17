@@ -3,6 +3,7 @@ const pl = {
     glossary: "Słownik",
     profile: "Profil",
     courses: "Kursy",
+    settings: "Ustawienia",
     law: "Prawo popytu i podaży",
     ppc: "Krzywa możliwości produkcyjnych",
     consumer: "Wybór konsumenta",
@@ -12,4 +13,3 @@ const pl = {
   };
   
   export default pl;
-  
