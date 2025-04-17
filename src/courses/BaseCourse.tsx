@@ -58,8 +58,12 @@ export default function BaseCourse({
       />
       
       {!isQuiz && currentLesson ? (
-        <LessonContent>
-          <h2 className="text-2xl font-bold mb-4">{currentLesson.title}</h2>
+        <LessonContent
+          title={currentLesson.title}
+          description={currentLesson.description}
+          courseId={metadata.id}
+          courseName={metadata.title}
+        >
           {renderLesson(currentLessonIndex)}
           <button
             onClick={handleNextLesson}
@@ -76,4 +80,4 @@ export default function BaseCourse({
       )}
     </div>
   );
-} 
+}

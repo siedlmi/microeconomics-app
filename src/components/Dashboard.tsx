@@ -1,6 +1,8 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { BookOpen, BarChart2, Clock, Search, Bell } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { BookOpen, BarChart2, Clock, Search, Bell, Bookmark, ChevronRight, X } from 'lucide-react';
+import { useBookmarks } from '../contexts/BookmarksContext';
 
 export default function Dashboard() {
   // Mock data - in a real app, this would come from your state management
@@ -15,6 +17,8 @@ export default function Dashboard() {
     { id: 2, type: 'lesson', title: 'Finished PPC Basics', time: '1 day ago' },
     { id: 3, type: 'note', title: 'Added notes on Elasticity', time: '2 days ago' },
   ];
+
+  const { bookmarks, removeBookmark } = useBookmarks();
 
   return (
     <div className="space-y-6">
@@ -33,6 +37,49 @@ export default function Dashboard() {
           className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
       </div>
+
+      {/* Bookmarked Lessons */}
+      {bookmarks.length > 0 && (
+        <div className="bg-white rounded-lg shadow p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-semibold text-gray-800">Bookmarked Lessons</h2>
+            <Bookmark className="text-yellow-500" size={20} />
+          </div>
+          <div className="space-y-3">
+            {bookmarks.map((bookmark) => (
+              <div
+                key={`${bookmark.courseId}-${bookmark.lessonId}`}
+                className="flex items-center p-3 hover:bg-gray-50 rounded-lg transition-colors group relative"
+              >
+                <Link
+                  to={`/courses/${bookmark.courseId}/${bookmark.lessonId}`}
+                  className="flex items-center flex-1"
+                >
+                  <div className="flex-1">
+                    <h3 className="font-medium text-gray-800 group-hover:text-indigo-600">
+                      {bookmark.title}
+                    </h3>
+                    <p className="text-sm text-gray-500">{bookmark.courseName}</p>
+                  </div>
+                </Link>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      removeBookmark(bookmark.courseId, bookmark.lessonId);
+                    }}
+                    className="p-2 text-gray-400 hover:text-red-500 rounded-full hover:bg-red-50 transition-colors"
+                    title="Remove bookmark"
+                  >
+                    <X size={16} />
+                  </button>
+                  <ChevronRight className="text-gray-400 group-hover:text-indigo-500" size={20} />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Course Progress */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -109,4 +156,3 @@ export default function Dashboard() {
     </div>
   );
 }
-  

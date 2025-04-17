@@ -1,10 +1,15 @@
 import React from 'react';
+import { Bookmark } from 'lucide-react';
+import { useParams } from 'react-router-dom';
+import { useBookmarks } from '../contexts/BookmarksContext';
 import GlossaryLink from './GlossaryLink';
 
 interface LessonContentProps {
   title?: string;
   description?: string;
   children?: React.ReactNode;
+  courseId?: string;
+  courseName?: string;
 }
 
 // Terms we want to link to the glossary
@@ -22,7 +27,25 @@ const glossaryTerms = [
   'Price Floor'
 ];
 
-export default function LessonContent({ title, description, children }: LessonContentProps) {
+export default function LessonContent({ title, description, children, courseId, courseName }: LessonContentProps) {
+  const { lessonId } = useParams();
+  const { isBookmarked, addBookmark, removeBookmark } = useBookmarks();
+
+  const handleBookmarkToggle = () => {
+    if (!courseId || !lessonId || !title || !courseName) return;
+
+    if (isBookmarked(courseId, lessonId)) {
+      removeBookmark(courseId, lessonId);
+    } else {
+      addBookmark({
+        courseId,
+        lessonId,
+        title,
+        courseName
+      });
+    }
+  };
+
   // Function to add glossary links to text
   const addGlossaryLinks = (text: string) => {
     let result = [];
@@ -75,9 +98,23 @@ export default function LessonContent({ title, description, children }: LessonCo
   return (
     <div className="space-y-6">
       {title && (
-        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-gray-900">
-          {title}
-        </h1>
+        <div className="flex justify-between items-center">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-gray-900">
+            {title}
+          </h1>
+          {courseId && lessonId && (
+            <button
+              onClick={handleBookmarkToggle}
+              className={`p-2 rounded-full transition-colors ${
+                isBookmarked(courseId, lessonId)
+                  ? 'text-yellow-500 hover:text-yellow-600'
+                  : 'text-gray-400 hover:text-gray-500'
+              }`}
+            >
+              <Bookmark className="w-6 h-6" fill={isBookmarked(courseId, lessonId) ? "currentColor" : "none"} />
+            </button>
+          )}
+        </div>
       )}
       {description && (
         <div className="prose prose-lg max-w-none">
@@ -91,4 +128,4 @@ export default function LessonContent({ title, description, children }: LessonCo
       </div>
     </div>
   );
-} 
+}
