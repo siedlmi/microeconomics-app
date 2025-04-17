@@ -8,11 +8,13 @@ export interface Lesson {
 export interface QuizOption {
   text: string;
   isCorrect: boolean;
+  explanation?: string;
 }
 
 export interface QuizQuestion {
   question: string;
   options: QuizOption[];
+  explanation?: string;
 }
 
 export interface CourseContent {
@@ -29,4 +31,4 @@ export interface CourseMetadata {
 
 export interface CourseProps {
   onComplete: () => void;
-} 
+}

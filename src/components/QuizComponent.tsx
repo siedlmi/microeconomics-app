@@ -1,15 +1,18 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Check, X } from 'lucide-react';
 import GlossaryLink from './GlossaryLink';
 
 interface Option {
   text: string;
   isCorrect: boolean;
+  explanation?: string;
 }
 
 interface Question {
   question: string;
   options: Option[];
+  explanation?: string;
 }
 
 interface QuizProps {
@@ -20,14 +23,26 @@ interface QuizProps {
 export default function QuizComponent({ quiz, onComplete }: QuizProps) {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState<number[]>(new Array(quiz.length).fill(-1));
+  const [checkedAnswers, setCheckedAnswers] = useState<boolean[]>(new Array(quiz.length).fill(false));
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   const handleAnswer = (answerIndex: number) => {
-    if (isSubmitted) return;
+    if (isSubmitted || checkedAnswers[currentQuestion]) return;
     
     const newAnswers = [...selectedAnswers];
     newAnswers[currentQuestion] = answerIndex;
     setSelectedAnswers(newAnswers);
+  };
+
+  const handleCheckAnswer = () => {
+    if (selectedAnswers[currentQuestion] === -1) {
+      alert('Please select an answer before checking.');
+      return;
+    }
+    
+    const newCheckedAnswers = [...checkedAnswers];
+    newCheckedAnswers[currentQuestion] = true;
+    setCheckedAnswers(newCheckedAnswers);
   };
 
   const handleNext = () => {
@@ -62,18 +77,19 @@ export default function QuizComponent({ quiz, onComplete }: QuizProps) {
     : 0;
 
   const getAnswerClassName = (questionIndex: number, answerIndex: number) => {
-    if (!isSubmitted) {
-      return selectedAnswers[questionIndex] === answerIndex
-        ? 'bg-blue-100 border-blue-500'
-        : 'hover:bg-gray-50';
+    const isChecked = checkedAnswers[questionIndex];
+    const isSelected = selectedAnswers[questionIndex] === answerIndex;
+    const isCorrect = quiz[questionIndex].options[answerIndex].isCorrect;
+
+    if (!isChecked && !isSubmitted) {
+      return isSelected ? 'bg-blue-100 border-blue-500' : 'hover:bg-gray-50';
     }
 
-    const option = quiz[questionIndex].options[answerIndex];
-    if (option.isCorrect) {
+    if (isCorrect) {
       return 'bg-green-100 border-green-500';
     }
 
-    if (selectedAnswers[questionIndex] === answerIndex) {
+    if (isSelected && !isCorrect) {
       return 'bg-red-100 border-red-500';
     }
 
@@ -104,32 +120,58 @@ export default function QuizComponent({ quiz, onComplete }: QuizProps) {
           className="mb-6"
         >
           <h3 className="text-lg font-medium mb-4">{quiz[currentQuestion].question}</h3>
-          <div className="space-y-2">
+          <div className="space-y-3">
             {quiz[currentQuestion].options.map((option, index) => (
-              <button
-                key={index}
-                onClick={() => handleAnswer(index)}
-                className={`w-full p-3 text-left border rounded transition-colors ${getAnswerClassName(
-                  currentQuestion,
-                  index
-                )}`}
-                disabled={isSubmitted}
-              >
-                {option.text}
-              </button>
+              <div key={index} className="space-y-2">
+                <button
+                  onClick={() => handleAnswer(index)}
+                  disabled={checkedAnswers[currentQuestion] || isSubmitted}
+                  className={`w-full p-4 text-left border rounded transition-colors ${getAnswerClassName(
+                    currentQuestion,
+                    index
+                  )}`}
+                >
+                  <div className="flex items-center justify-between">
+                    <span>{option.text}</span>
+                    {(checkedAnswers[currentQuestion] || isSubmitted) && (
+                      <span>
+                        {option.isCorrect ? (
+                          <Check className="text-green-600" size={20} />
+                        ) : selectedAnswers[currentQuestion] === index ? (
+                          <X className="text-red-600" size={20} />
+                        ) : null}
+                      </span>
+                    )}
+                  </div>
+                </button>
+                {(checkedAnswers[currentQuestion] || isSubmitted) && 
+                  selectedAnswers[currentQuestion] === index && 
+                  option.explanation && (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: "auto" }}
+                      className="px-4 py-2 rounded-lg text-sm"
+                      style={{
+                        backgroundColor: option.isCorrect ? "rgba(0, 255, 0, 0.05)" : "rgba(255, 0, 0, 0.05)"
+                      }}
+                    >
+                      <p className={option.isCorrect ? "text-green-700" : "text-red-700"}>
+                        {option.explanation}
+                      </p>
+                    </motion.div>
+                )}
+              </div>
             ))}
           </div>
 
-          {isSubmitted && (
+          {(checkedAnswers[currentQuestion] || isSubmitted) && quiz[currentQuestion].explanation && (
             <motion.div
               initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              className="mt-4 p-4 bg-blue-50 rounded-lg"
+              animate={{ opacity: 1, height: "auto" }}
+              className="mt-4 p-4 bg-blue-50 rounded-lg border border-blue-100"
             >
-              <h4 className="font-medium mb-2">Explanation:</h4>
-              <p className="text-gray-700">
-                The correct answer is: {quiz[currentQuestion].options.find(opt => opt.isCorrect)?.text}
-              </p>
+              <h4 className="font-medium mb-2 text-blue-800">Explanation:</h4>
+              <p className="text-gray-700">{quiz[currentQuestion].explanation}</p>
             </motion.div>
           )}
         </motion.div>
@@ -153,21 +195,32 @@ export default function QuizComponent({ quiz, onComplete }: QuizProps) {
           </button>
         </div>
 
-        {!isSubmitted && allQuestionsAnswered && (
-          <button
-            onClick={handleSubmit}
-            className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
-          >
-            Submit Quiz
-          </button>
-        )}
+        <div className="space-x-2">
+          {!checkedAnswers[currentQuestion] && !isSubmitted && (
+            <button
+              onClick={handleCheckAnswer}
+              disabled={selectedAnswers[currentQuestion] === -1}
+              className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 disabled:opacity-50"
+            >
+              Check Answer
+            </button>
+          )}
+          {!isSubmitted && allQuestionsAnswered && (
+            <button
+              onClick={handleSubmit}
+              className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+            >
+              Submit Quiz
+            </button>
+          )}
+        </div>
       </div>
 
       {isSubmitted && (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mt-6 p-4 bg-gray-50 rounded-lg"
+          className="mt-6 p-4 bg-gray-50 rounded-lg border border-gray-200"
         >
           <h3 className="font-medium mb-2">Quiz Complete!</h3>
           <p>
@@ -183,43 +236,6 @@ export default function QuizComponent({ quiz, onComplete }: QuizProps) {
           >
             Continue
           </button>
-        </motion.div>
-      )}
-
-      {isSubmitted && (
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mt-6 space-y-6"
-        >
-          <h3 className="text-lg font-medium">Quiz Summary</h3>
-          {quiz.map((question, questionIndex) => (
-            <div key={questionIndex} className="p-4 bg-white rounded-lg shadow-sm">
-              <h4 className="font-medium mb-3">{question.question}</h4>
-              <div className="space-y-2">
-                {question.options.map((option, optionIndex) => (
-                  <div
-                    key={optionIndex}
-                    className={`p-3 border rounded ${
-                      option.isCorrect
-                        ? 'bg-green-100 border-green-500'
-                        : selectedAnswers[questionIndex] === optionIndex
-                        ? 'bg-red-100 border-red-500'
-                        : 'border-gray-200'
-                    }`}
-                  >
-                    {option.text}
-                    {option.isCorrect && (
-                      <span className="ml-2 text-green-600 font-medium">✓ Correct Answer</span>
-                    )}
-                    {selectedAnswers[questionIndex] === optionIndex && !option.isCorrect && (
-                      <span className="ml-2 text-red-600 font-medium">✗ Your Answer</span>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
-          ))}
         </motion.div>
       )}
     </div>
